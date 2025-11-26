@@ -1,4 +1,4 @@
-name: CI - tp-sec
+name: CI
 
 on:
   push:
@@ -8,7 +8,7 @@ jobs:
   deps:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Use Node.js 20
@@ -16,8 +16,10 @@ jobs:
         with:
           node-version: 20
           cache: yarn
-      - name: Enable corePack
+
+      - name: Enable Corepack
         run: corepack enable
+
       - name: Install dependencies
         run: yarn install
 
@@ -28,19 +30,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: yarn
 
-      - name: Enable corePack
+      - name: Enable Corepack
         run: corepack enable
+
       - name: Install dependencies
-        run: yarn
-  
-      - name: lint du code 
-        uses: yarn lint
+        run: yarn install
 
-
-
+      - name: Lint du code
+        run: yarn lint
