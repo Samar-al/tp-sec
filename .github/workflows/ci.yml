@@ -69,37 +69,14 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      # ⚠️ tu m’as dit que tu avais "yarn dev:coverage"
+      - name: Prepare env (same as yarn dev)
+        run: |
+          yarn db:seed:dev
+          yarn predev:cognito:ci
+          yarn copy:mock:awsexports
+          yarn copy:mock:awsexportses5
+
       - name: Run unit + component tests with coverage
         run: yarn dev:coverage
-
-  # 4) Cypress (UI + API) via yarn cypress:run --env coverage=true
-  cypress-tests:
-    runs-on: ubuntu-latest
-    needs: unit-component-tests
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Use Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: yarn
-
-      - name: Enable Corepack
-        run: corepack enable || true
-
-      - name: Install dependencies
-        run: yarn install
-
-      # On lance EXACTEMENT comme en local : yarn dev
-      # qui fait db:seed, mock aws, start:react, start:api:watch
-      - name: Start app (frontend + backend) and wait
-        run: |
-          yarn dev &
-          npx wait-on http://localhost:3000 http://localhost:3001 --timeout 600000
-
       - name: Run Cypress tests with coverage
-        run: yarn cypress:run --env coverage=true
+        run: yarn cypress:run --env coverage=true  
