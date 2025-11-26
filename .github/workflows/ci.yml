@@ -66,11 +66,17 @@ jobs:
         - name: Install dependencies
           run: yarn install
 
-        - name: Start dev server
-          run: yarn dev:coverage
-        
+        - name: Seed DB + mock AWS + build env
+          run: |
+            yarn db:seed:dev
+            yarn predev:cognito:ci
+            yarn copy:mock:awsexports
+            yarn copy:mock:awsexportses5
+        - name: Start backend and frontend
+          run: |
+            yarn start:api:ci &
+            yarn start:react &
+            npx wait-on http://localhost:3000 http://localhost:3001
+  
         - name: Run Cypress tests
-          uses: cypress-io/github-action@v6
-          with:
-            wait-on: 'http://localhost:3000'
-            command: yarn cypress:run --env coverage=true
+          run: yarn cypress:run --env coverage=true
