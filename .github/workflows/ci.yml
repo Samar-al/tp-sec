@@ -76,7 +76,10 @@ jobs:
           yarn copy:mock:awsexports
           yarn copy:mock:awsexportses5
 
-      - name: Run unit + component tests with coverage
-        run: yarn dev:coverage
+      - name: Start app with coverage
+        run: |
+          yarn dev:coverage &
+          npx wait-on http://localhost:3000 http://localhost:3001 --timeout 600000
+    
       - name: Run Cypress tests with coverage
-        run: yarn cypress:run --env coverage=true  
+        run: yarn cypress:run --env coverage=true
