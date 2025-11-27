@@ -146,3 +146,8 @@ jobs:
             -w /jmeter \
             justb4/jmeter:5.5 \
             -n -t tests/jmeter/plan.jmx -l tests/jmeter/results.jtl
+      - name: Upload JMeter results
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-results
+          path: tests/jmeter/results.jtl
